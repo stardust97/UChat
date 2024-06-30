@@ -35,8 +35,6 @@ IF(DEFINED COMPILE_TOOLCHAIN_ROOT)
 
   set(CMAKE_CXX_COMPILER ${TOOLCHAIN_COMPILER_ROOT}/aarch64-linux-gnu-g++)
   set(CMAKE_C_COMPILER ${TOOLCHAIN_COMPILER_ROOT}/aarch64-linux-gnu-gcc)
-
-  set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -O0 -Wall -g2 -ggdb")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -Wall")
 ELSE()
@@ -45,18 +43,23 @@ ELSE()
   string(REPLACE "\n" "" CMAKE_GCC_VERSION "${GCC_VERSION}")
 ENDIF()
 
+set(CMAKE_CXX_STANDARD 17)
 project( "UChat_Client" VERSION 2024 LANGUAGES CXX C )
 option(SHARED_STATIC "shared static" OFF)
 option(INSTALL "install" ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(boost_path ${PROJECT_SOURCE_DIR}/../../third_party/boost)
 
 include_directories(
   ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/../Common
+  ${boost_path}/include
 )
 
 link_directories(
   ${PROJECT_SOURCE_DIR}/lib
+  ${boost_path}/lib
 )
 
 # ARM Platform
@@ -66,6 +69,7 @@ IF(DEFINED COMPILE_TOOLCHAIN_ROOT)
 
   link_directories(
   )
+
 # X86 Platform
 ELSE()
   include_directories(
@@ -76,7 +80,6 @@ ELSE()
 ENDIF()
 
 
-
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
 IF(COMPILE_TOOLCHAIN_ROOT_TEST)
@@ -84,9 +87,5 @@ IF(COMPILE_TOOLCHAIN_ROOT_TEST)
 ENDIF()
 
 
-if(INSTALL)
-  set(OUTPUT "${PROJECT_SOURCE_DIR}/build/output/gate_server")
-  install(TARGETS gate_server RUNTIME DESTINATION ${OUTPUT}/bin)
-  # install({FILES | PROGRAMS} <file>... [...])
-endif()
+
 
