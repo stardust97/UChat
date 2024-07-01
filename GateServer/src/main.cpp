@@ -14,8 +14,8 @@ int main() {
         ioc.stop();
       });
 
-  std::shared_ptr<uchat::gate_server::Accptor> acc =
-      std::make_shared<uchat::gate_server::Accptor>(ioc, 8889);
+  std::shared_ptr<uchat::gate_server::BoostAcceptor> acc =
+      std::make_shared<uchat::gate_server::BoostAcceptor>(ioc, 8889);
   acc->Start();
   ioc.run();
 
