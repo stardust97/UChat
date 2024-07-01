@@ -5,6 +5,12 @@ add_executable(
   ${DIRSRCS} 
 )
 
+target_link_libraries(
+  test_gate_server
+  PRIVATE
+  pthread
+)
+
 if(INSTALL)
   set(OUTPUT "${PROJECT_SOURCE_DIR}/build/output/gate_server")
   install(TARGETS test_gate_server RUNTIME DESTINATION ${OUTPUT}/bin)
