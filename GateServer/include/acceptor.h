@@ -8,15 +8,15 @@
 namespace uchat {
 namespace gate_server {
   
-class Accptor : public std::enable_shared_from_this<Accptor>{
+class BoostAcceptor : public std::enable_shared_from_this<BoostAcceptor>{
 public:
-  Accptor(uc_ion_contex& ioc,unsigned short port);
-  ~Accptor();
+  BoostAcceptor(uc_ion_contex& ioc,unsigned short port);
+  ~BoostAcceptor();
   
-  Accptor(Accptor const &) = delete;
-  Accptor(Accptor &&) = delete;
-  Accptor &operator=(Accptor const &) = delete;
-  Accptor &operator=(Accptor &&) = delete;
+  BoostAcceptor(BoostAcceptor const &) = delete;
+  BoostAcceptor(BoostAcceptor &&) = delete;
+  BoostAcceptor &operator=(BoostAcceptor const &) = delete;
+  BoostAcceptor &operator=(BoostAcceptor &&) = delete;
 
   // start to accepter a new http connection
   void Start();

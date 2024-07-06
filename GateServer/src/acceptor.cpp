@@ -9,12 +9,12 @@
 namespace uchat {
 namespace gate_server {
 
-Accptor::Accptor(uc_ion_contex &ioc, unsigned short port)
+BoostAcceptor::BoostAcceptor(uc_ion_contex &ioc, unsigned short port)
     : ioc_{ioc}, acceptor_{ioc_, uctcp::endpoint(uctcp::v4(), port)} {}
 
-Accptor::~Accptor() {}
+BoostAcceptor::~BoostAcceptor() {}
 
-void Accptor::Start() {
+void BoostAcceptor::Start() {
   auto self = shared_from_this();
   std::shared_ptr<HttpConnection> conn = std::make_shared<HttpConnection>(ioc_);
   acceptor_.async_accept(conn->GetSocket(),[self,conn](boost::system::error_code ec) {
