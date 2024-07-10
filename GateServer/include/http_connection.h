@@ -16,27 +16,41 @@ public:
   HttpConnection(uc_ion_contex& ioc);
   ~HttpConnection();
 
-  // start to recv and handle a http message
-  // no-blocked 
+  // start to recv and handle a http message, no-blocked 
   void Start();
 
   uctcp::socket &GetSocket() { return socket_; }
 
+  void PreParseGetParam();
+
+#ifdef ENABLE_TEST
+public:
+#else
 private:
+#endif
 
   void handle_req();
 
   void write_response();
 
   void check_deadline();
+  
+  void parse_param(std::string const& param_str);
 
-private:
+  unsigned char dec_to_hex(unsigned char c);
+  unsigned char hex_to_dec(unsigned char c);
+
+  std::string UrlEncode(const std::string &str);
+
+  std::string UrlDecode(const std::string &str);
+
   uctcp::socket socket_;
   ucbeast::flat_buffer buffer_;
   ucbeast::net::steady_timer deadline_;
   uchttp::request<uchttp::dynamic_body> request_;
   uchttp::response<uchttp::dynamic_body> response_;
-
+  std::string url_;
+  std::unordered_map<std::string, std::string> url_params_;
 };
 
 } // namespace gate_server

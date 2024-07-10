@@ -15,10 +15,20 @@ LogicSystem& LogicSystem::GetInstance() {
 }
 
 LogicSystem::LogicSystem() {
-  RegisterHandler("/get_test", [](std::shared_ptr<HttpConnection> connection) {
-    ucbeast::ostream(connection->response_.body())
-        << "receive get_test req \nhello client!";
-  });
+  RegisterHandler(
+      "/get_test", [](std::shared_ptr<HttpConnection> connection) {
+        ucbeast::ostream(connection->response_.body())
+            << "receive get_test req \nhello client!\n";
+        int i = 0;
+        for (auto &elem : connection->url_params_) {
+          i++;
+          ucbeast::ostream(connection->response_.body())
+              << "param" << i << " key is " << elem.first;
+          ucbeast::ostream(connection->response_.body())
+              << ", "
+              << " value is " << elem.second << std::endl;
+        }
+      });
 }
 
 LogicSystem::~LogicSystem() {

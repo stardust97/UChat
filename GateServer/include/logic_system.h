@@ -1,13 +1,10 @@
 #ifndef _UCHAT_GATE_SERVER_LOGIC_SYSTEM_H_
 #define _UCHAT_GATE_SERVER_LOGIC_SYSTEM_H_
 
-#include "http_connection.h"
-
 #include <functional>
 #include <memory>
 #include <unordered_map>
 
-#include "net_const.h"
 #include "macro.h"
 
 namespace uchat {

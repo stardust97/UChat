@@ -22,7 +22,10 @@ int main(int argc, char** argv) {
     // 定义主机名、端口和目标路径
     std::string_view host = "127.0.0.1";
     std::string_view port = "8889";
-    std::string target = "/1234";
+    std::string target = "/get_test?key1=2F%1&key2=ad 29+";
+    if(argc<2){
+      std::cout << "too few params" << std::endl;
+    }
     target = argv[1];
     int version = 11; // 使用 HTTP 1.1 版本
 
