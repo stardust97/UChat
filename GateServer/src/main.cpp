@@ -1,23 +1,9 @@
-#include "acceptor.h"
-#include "net_const.h"
-#include <memory>
-
+#include "gate_server.h"
 
 int main() {
-  uc_ion_contex ioc{1};
-  boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
-  signals.async_wait(
-      [&ioc](const boost::system::error_code &error, int signal_number) {
-        if (error) {
-          return;
-        }
-        ioc.stop();
-      });
-
-  std::shared_ptr<uchat::gate_server::BoostAcceptor> acc =
-      std::make_shared<uchat::gate_server::BoostAcceptor>(ioc, 8889);
-  acc->Start();
-  ioc.run();
+  auto& server = uchat::gate_server::GateServer::GetInstance();
+  server.Init("");
+  server.Start();
 
   return 0;
 }
