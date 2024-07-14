@@ -4,6 +4,7 @@ LABEL maintainer="tianchenggg@foxmail.com"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+#todo protobuf grpc
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -13,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     cmake \
     python3 \
     python3-pip \
+    libjsoncpp-dev \
+    libspdlog-dev \
+    autoconf libtool pkg-config \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
