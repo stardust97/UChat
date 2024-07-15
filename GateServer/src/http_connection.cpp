@@ -54,12 +54,12 @@ void HttpConnection::PreParseGetParam() {
       std::string decode_url =
           url_decode(url_param.substr(pos_and1 + 1, pos_and2 - pos_and1 - 1));
       parse_param(decode_url);
-      pos_and2 = pos_and1;
-      pos_and1 = url_param.find("&", pos_and2 + 1);
+      pos_and1 = pos_and2;
+      pos_and2 = url_param.find("&", pos_and1 + 1);
     } else {
-      std::string decode_url = url_decode(url_param.substr(pos_and1));
+      std::string decode_url = url_decode(url_param.substr(pos_and1 + 1));
       parse_param(decode_url);
-      pos_and2 = pos_and1;
+      pos_and1 = pos_and2;
     }
   }
 }

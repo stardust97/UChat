@@ -27,12 +27,12 @@ TEST(http_conn, encode) {
   // EXPECT_EQ(url_encode, "key1=%0C+key2=%3E");
 }
 
-//bug
+
 TEST(http_conn, parse_param) {
   uc_ion_contex ioc;
   HttpConnection conn(ioc);
-  std::string url = "127.0.0.1:/8889/login/"
-                    "verify?email=12345678@qq.com&password=qwerasdf&sms=078956";
+  std::string url =
+      "/login/verify?email=12345678@qq.com&password=qwerasdf&sms=078956";
   conn.request_.target(url);
   conn.PreParseGetParam();
   EXPECT_EQ(conn.url_, "/login/verify");
