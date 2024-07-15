@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <string_view>
 
 #include "boost/asio/write.hpp"
 #include "boost/system/detail/error_code.hpp"

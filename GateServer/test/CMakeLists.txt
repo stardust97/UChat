@@ -1,3 +1,5 @@
+find_package(GTest REQUIRED)
+
 add_executable(
   test_gate_server
   test_gate_server.cpp
@@ -21,6 +23,7 @@ target_link_libraries(
   test_http_connection
   PRIVATE
   pthread
+  gtest gtest_main
 )
 
 

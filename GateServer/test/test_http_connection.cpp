@@ -1,41 +1,42 @@
-#include <iostream>
 #include <string>
 #define ENABLE_TEST
 #include "../include/http_connection.h"
+#include <gtest/gtest.h>
 
 using namespace uchat::gate_server;
 
-
-int main() {
-
+TEST(http_conn, encode) {
   uc_ion_contex ioc;
   HttpConnection conn(ioc);
-  // std::string url = "key1=%20+key2=%1F";
-  // std::string url_decode = conn.UrlDecode(url);
-  // std::string url_encode = conn.UrlEncode(url_decode);
-  // url_decode = conn.UrlDecode(url);
-
-  // std::cout << url_decode << std::endl;
-  // std::cout << url_encode << std::endl;
-  // std::cout << url_decode << std::endl;
+  std::string url = "key1=%20 key2=1F";
+  std::string url_encode = conn.url_encode(url);
+  std::string url_decode = conn.url_decode(url_encode);
+  EXPECT_EQ(url_encode, "key1%3D%2520+key2%3D1F");
+  EXPECT_EQ(url_decode, "key1=%20 key2=1F");
 
   // url = "key1=%C2+key2=%3E";
-  // url_decode = conn.UrlDecode(url);
-  // url_encode = conn.UrlEncode(url_decode);
-  // url_decode = conn.UrlDecode(url);
+  // url_decode = conn.url_decode(url);
+  // url_encode = conn.url_encode(url_decode);
+  // EXPECT_EQ(url_decode, "key1=194 key2=62");
+  // EXPECT_EQ(url_encode, "key1=%C2+key2=%3E");
 
-  // std::cout << url_decode << std::endl;
-  // std::cout << url_encode << std::endl;
-  // std::cout << url_decode << std::endl;
+  // url = "key1=%C+key2=%3E";
+  // url_decode = conn.url_decode(url);
+  // url_encode = conn.url_encode(url_decode);
+  // EXPECT_EQ(url_decode, "key1=15 key2=62");
+  // EXPECT_EQ(url_encode, "key1=%0C+key2=%3E");
+}
 
-  std::string url2 = "127.0.0.1:/8889/get_test?key1=value1&key2=value2";
-  std::string res = url2.substr(25,36-24);
-  std::cout << "res: " << res << std::endl;
-  conn.request_.target(url2);
+//bug
+TEST(http_conn, parse_param) {
+  uc_ion_contex ioc;
+  HttpConnection conn(ioc);
+  std::string url = "127.0.0.1:/8889/login/"
+                    "verify?email=12345678@qq.com&password=qwerasdf&sms=078956";
+  conn.request_.target(url);
   conn.PreParseGetParam();
-  for (auto &it : conn.url_params_) {
-    std::cout << it.first << ": " << it.second << std::endl;
-  }
-
-  return 0;
+  EXPECT_EQ(conn.url_, "/login/verify");
+  EXPECT_EQ(conn.url_params_["email"], "12345678@qq.com");
+  EXPECT_EQ(conn.url_params_["password"], "qwerasdf");
+  EXPECT_EQ(conn.url_params_["sms"], "078956");
 }

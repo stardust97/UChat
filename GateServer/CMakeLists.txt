@@ -36,7 +36,3 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 IF(COMPILE_TOOLCHAIN_ROOT_TEST)
   add_subdirectory(${PROJECT_SOURCE_DIR}/test)
 ENDIF()
-
-
-
-

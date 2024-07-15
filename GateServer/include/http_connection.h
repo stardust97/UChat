@@ -40,9 +40,9 @@ private:
   unsigned char dec_to_hex(unsigned char c);
   unsigned char hex_to_dec(unsigned char c);
 
-  std::string UrlEncode(const std::string &str);
+  std::string url_encode(const std::string &str);
 
-  std::string UrlDecode(const std::string &str);
+  std::string url_decode(const std::string &str);
 
   uctcp::socket socket_;
   ucbeast::flat_buffer buffer_;
