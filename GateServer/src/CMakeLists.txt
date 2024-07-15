@@ -14,10 +14,11 @@ target_link_libraries(
   PRIVATE
   pthread
   spdlog::spdlog
+  jsoncpp
 )
 
 if(INSTALL)
   set(OUTPUT "${PROJECT_SOURCE_DIR}/build/output/gate_server")
   install(TARGETS gate_server RUNTIME DESTINATION ${OUTPUT}/bin)
-  # install({FILES | PROGRAMS} <file>... [...])
+  install(FILES ${CMAKE_SOURCE_DIR}/conf/log_setting.json DESTINATION ${OUTPUT}/conf)
 endif()

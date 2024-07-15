@@ -1,0 +1,6 @@
+{
+  "log_level": "info",
+  "log_path": "log/gate_server.log",
+  "enable_file": true,
+  "enable_console": true
+}
