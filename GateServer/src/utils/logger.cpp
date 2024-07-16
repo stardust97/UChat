@@ -1,36 +1,111 @@
 #include "utils/logger.h"
 
+#include <chrono>
+#include <fstream>
+#include <iostream>
+
+#include "jsoncpp/json/json.h"
 #include "spdlog/sinks/basic_file_sink.h"
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/value.h>
 #include <spdlog/common.h>
 #include <spdlog/spdlog.h>
+#include <stdexcept>
+#include <system_error>
 
 namespace uchat {
-Logger &Logger::GetLogger() {
+Logger &Logger::GetInstance() {
   static Logger instance;
   return instance;
 }
 
 void Logger::Init(std::string_view config_path) {
-  bool enable_console = false;
-  // logger_ = spdlog::basic_logger_mt("file", "my_log.log");
-  console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-  console_sink_->set_level(spdlog::level::info);
-  console_sink_->set_pattern("[console] [%^%l%$] %v");
+  std::fstream fin(config_path.data(), std::ios::in);
+  if (!fin.is_open()) {
+    throw std::runtime_error("Failed to open config file");
+  }
+  Json::Value root;
+  Json::CharReaderBuilder builder;
+  std::string err;
+  if (!Json::parseFromStream(builder, fin, &root, &err)) {
+    throw std::runtime_error("read param from file failed: " + err);
+    return;
+  }
 
-  file_sink_ = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
-      "logs/multisink.txt", true);
-  file_sink_->set_level(spdlog::level::trace);
-  file_sink_->set_pattern("[file] [%^%l%$] %v");
+  bool enable_console = root["enable_console"].asBool();
+  bool enable_file = root["enable_file"].asBool();
+  std::string level_str = root["log_level"].asString();
+  if (level_str == "debug") {
+    level_ = LogLevel::kDebug;
+  } else if (level_str == "info") {
+    level_ = LogLevel::kInfo;
+  } else if (level_str == "warn") {
+    level_ = LogLevel::kWarn;
+  } else if (level_str == "error") {
+    level_ = LogLevel::kError;
+  } else {
+    throw std::runtime_error("invalid log level: " + level_str);
+    return;
+  }
 
-  spdlog::sinks_init_list sink_list = {console_sink_, file_sink_};
-  logger_ = std::make_shared<spdlog::logger>("multi_logger", sink_list.begin(),
-                                             sink_list.end());
+  std::string log_path = root["log_path"].asString();
 
-  spdlog::register_logger(logger_);
-  logger_->set_level(spdlog::level::trace);
-  logger_->flush_on(spdlog::level::trace);
+  if (enable_console) {
+    console_logger_ = spdlog::stdout_color_mt("defalut_console_logger");
+    console_logger_->set_level(spdlog::level::info);
+    console_logger_->set_pattern("[console] [%^%l%$] %v");
+  }
+
+  if (enable_file) {
+    file_logger_ = spdlog::basic_logger_mt("default_file_logger", log_path);
+    file_logger_->set_level(spdlog::level::info);
+    file_logger_->set_pattern("[file] [%^%l%$] %v");
+    file_logger_->info("File Logger Init succeed");
+    spdlog::flush_every(std::chrono::seconds(1));
+  }
+
+  // logger_->flush_on(spdlog::level::trace);
+}
+void Logger::SetLevel(LogLevel level) { level_ = level; }
+
+void Logger::LogFile(std::string_view message, LogLevel level) {
+  if (level_ > level || !file_logger_) {
+    return;
+  }
+  switch (level) {
+  case LogLevel::kError:
+    file_logger_->error(message);
+    break;
+  case LogLevel::kWarn:
+    file_logger_->warn(message);
+    break;
+  case LogLevel::kInfo:
+    file_logger_->info(message);
+    break;
+  default:
+    file_logger_->trace(message);
+    break;
+  }
 }
 
-
+void Logger::LogConsole(std::string_view message, LogLevel level) {
+  if (level_ > level || !console_logger_) {
+    return;
+  }
+  switch (level) {
+  case LogLevel::kError:
+    console_logger_->error(message);
+    break;
+  case LogLevel::kWarn:
+    console_logger_->warn(message);
+    break;
+  case LogLevel::kInfo:
+    console_logger_->info(message);
+    break;
+  default:
+    console_logger_->trace(message);
+    break;
+  }
+}
 
 } // namespace uchat
