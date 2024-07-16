@@ -37,9 +37,47 @@ public:
 
   void Init(std::string_view config_path);
 
-  void LogFile(std::string_view message, LogLevel level);
+  template <typename... Args>
+  void LogFile(LogLevel level, const char *format, Args &&... args) {
+    if (level_ > level || !file_logger_) {
+      return;
+    }
+    switch (level) {
+    case LogLevel::kError:
+      file_logger_->error(format, std::forward<Args>(args)...);
+      break;
+    case LogLevel::kWarn:
+      file_logger_->warn(format, std::forward<Args>(args)...);
+      break;
+    case LogLevel::kInfo:
+      file_logger_->info(format, std::forward<Args>(args)...);
+      break;
+    default:
+      file_logger_->trace(format, std::forward<Args>(args)...);
+      break;
+    }
+  }
 
-  void LogConsole(std::string_view message, LogLevel level);
+  template <typename... Args>
+  void LogConsole(LogLevel level, const char *format, Args &&... args) {
+    if (level_ > level || !console_logger_) {
+      return;
+    }
+    switch (level) {
+    case LogLevel::kError:
+      console_logger_->error(format, std::forward<Args>(args)...);
+      break;
+    case LogLevel::kWarn:
+      console_logger_->warn(format, std::forward<Args>(args)...);
+      break;
+    case LogLevel::kInfo:
+      console_logger_->info(format, std::forward<Args>(args)...);
+      break;
+    default:
+      console_logger_->trace(format, std::forward<Args>(args)...);
+      break;
+    }
+  }
 
   void SetLevel(LogLevel level);
 
@@ -53,25 +91,25 @@ private:
 };
 } // namespace uchat
 
-#define LogInfo(Message)                                                       \
+#define LogInfo(format, ...)                                                   \
   do {                                                                         \
-    auto& logger = uchat::Logger::GetInstance();                                \
-    logger.LogFile(Message, Logger::LogLevel::kInfo);                          \
-    logger.LogConsole(Message, Logger::LogLevel::kInfo);                       \
+    auto &logger = uchat::Logger::GetInstance();                               \
+    logger.LogFile(Logger::LogLevel::kInfo, format, ##__VA_ARGS__);            \
+    logger.LogConsole(Logger::LogLevel::kInfo, format, ##__VA_ARGS__);          \
   } while (0)
 
-#define LogWarn(Message)                                                       \
+#define LogWarn(format, ...)                                                   \
   do {                                                                         \
-    auto logger = uchat::Logger::GetInstance();                                \
-    logger.LogFile(Message, Logger::LogLevel::kWarn);                          \
-    logger.LogConsole(Message, Logger::LogLevel::kWarn);                       \
+    auto &logger = uchat::Logger::GetInstance();                               \
+    logger.LogFile(Logger::LogLevel::kWarn, format, ##__VA_ARGS__);            \
+    logger.LogConsole(Logger::LogLevel::kWarn, format, ##__VA_ARGS__);          \
   } while (0)
 
-#define LogError(Message)                                                      \
+#define LogError(format, ...)                                                  \
   do {                                                                         \
-    auto& logger = uchat::Logger::GetInstance();                                \
-    logger.LogFile(Message, Logger::LogLevel::kError);                         \
-    logger.LogConsole(Message, Logger::LogLevel::kError);                      \
+    auto &logger = uchat::Logger::GetInstance();                               \
+    logger.LogFile(Logger::LogLevel::kError, format, ##__VA_ARGS__);           \
+    logger.LogConsole(Logger::LogLevel::kError, format, ##__VA_ARGS__);         \
   } while (0)
 
 #endif

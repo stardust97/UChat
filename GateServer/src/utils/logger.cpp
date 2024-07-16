@@ -68,44 +68,5 @@ void Logger::Init(std::string_view config_path) {
 }
 void Logger::SetLevel(LogLevel level) { level_ = level; }
 
-void Logger::LogFile(std::string_view message, LogLevel level) {
-  if (level_ > level || !file_logger_) {
-    return;
-  }
-  switch (level) {
-  case LogLevel::kError:
-    file_logger_->error(message);
-    break;
-  case LogLevel::kWarn:
-    file_logger_->warn(message);
-    break;
-  case LogLevel::kInfo:
-    file_logger_->info(message);
-    break;
-  default:
-    file_logger_->trace(message);
-    break;
-  }
-}
-
-void Logger::LogConsole(std::string_view message, LogLevel level) {
-  if (level_ > level || !console_logger_) {
-    return;
-  }
-  switch (level) {
-  case LogLevel::kError:
-    console_logger_->error(message);
-    break;
-  case LogLevel::kWarn:
-    console_logger_->warn(message);
-    break;
-  case LogLevel::kInfo:
-    console_logger_->info(message);
-    break;
-  default:
-    console_logger_->trace(message);
-    break;
-  }
-}
 
 } // namespace uchat
