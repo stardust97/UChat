@@ -1,10 +1,10 @@
 # 1. 安装C++环境
   ```shell
-    apt-get update 
-    apt-get install -y build-essential 
-    apt-get install -y git 
-    apt-get install -y vim 
-    apt-get install -y cmake
+    sudo apt-get update 
+    sudo apt-get install -y build-essential 
+    sudo apt-get install -y git 
+    sudo apt-get install -y vim 
+    sudo apt-get install -y cmake
   ```
 
 # 2. 安装boost1.82：
@@ -19,8 +19,8 @@
 
 # 3. 安装jsoncpp、spdlog
 ```shell
-    apt-get update libjsoncpp-dev 
-    apt-get update libspdlog-dev 
+  sudo apt-get install libjsoncpp-dev 
+  sudo apt-get install libspdlog-dev 
 ```
 
 # 4. 安装GoogleTest
@@ -31,3 +31,86 @@
   make
   make install
 ```
+
+# 5. 安装grpc
+```shell
+  sudo apt-get install autoconf libtool pkg-config
+  git clone -b v1.28.x https://gitee.com/slrom/grpc
+  cd grpc
+```
+替换.gitmodule文件里的内容
+```
+[submodule "third_party/zlib"]
+	path = third_party/zlib
+	url = https://gitee.com/slrom/zlib.git
+	# When using CMake to build, the zlib submodule ends up with a
+	# generated file that makes Git consider the submodule dirty. This
+	# state can be ignored for day-to-day development on gRPC.
+	ignore = dirty
+[submodule "third_party/protobuf"]
+	path = third_party/protobuf
+	url = https://gitee.com/slrom/protobuf.git
+	branch = 3.0.x
+[submodule "third_party/gflags"]
+	path = third_party/gflags
+	url = https://gitee.com/slrom/gflags.git
+[submodule "third_party/googletest"]
+	path = third_party/googletest
+	url = https://gitee.com/slrom/googletest.git
+[submodule "third_party/benchmark"]
+	path = third_party/benchmark
+	url = https://gitee.com/slrom/benchmark.git
+[submodule "third_party/boringssl-with-bazel"]
+	path = third_party/boringssl-with-bazel
+	url = https://gitee.com/slrom/boringssl.git
+[submodule "third_party/boringssl"]
+	path = third_party/boringssl
+	url = https://gitee.com/slrom/boringssl.git
+[submodule "third_party/cares/cares"]
+	path = third_party/cares/cares
+	url = https://gitee.com/slrom/c-ares.git
+	branch = cares-1_12_0
+[submodule "third_party/bloaty"]
+	path = third_party/bloaty
+	url = https://gitee.com/slrom/bloaty.git
+[submodule "third_party/abseil-cpp"]
+	path = third_party/abseil-cpp
+	url = https://gitee.com/slrom/abseil-cpp.git
+	branch = lts_2020_02_25
+[submodule "third_party/envoy-api"]
+	path = third_party/envoy-api
+	url = https://gitee.com/slrom/data-plane-api.git
+[submodule "third_party/googleapis"]
+	path = third_party/googleapis
+	url = https://gitee.com/slrom/googleapis.git
+[submodule "third_party/protoc-gen-validate"]
+	path = third_party/protoc-gen-validate
+	url = https://gitee.com/slrom/protoc-gen-validate.git
+[submodule "third_party/udpa"]
+	path = third_party/udpa
+	url = https://gitee.com/slrom/udpa.git
+[submodule "third_party/libuv"]
+	path = third_party/libuv
+	url = https://gitee.com/slrom/libuv.git
+[submodule "third_party/libcxx"]
+    path = third_party/libcxx
+	url = https://gitee.com/slrom/libcxx.git
+[submodule "third_party/libcxxabi"]
+    path = third_party/libcxxabi
+	url = https://gitee.com/slrom/libcxxabi.git
+```
+
+```shell
+  git submodule update --init
+  mkdir -p cmake/build
+  cd cmake/build
+  cmake -DgRPC_INSTALL=ON \
+      -DgRPC_BUILD_TESTS=OFF \
+      -DCMAKE_INSTALL_PREFIX=安装路径 \
+      -DBUILD_SHARED_LIBS=ON \
+      ../..
+  make -j4
+  make install  
+```
+
+
