@@ -45,8 +45,7 @@ target_link_libraries(
   pthread
   spdlog::spdlog
   jsoncpp
-  ${Boost_LIBRARIES}
-  ${Protobuf_LIBRARIES}
-  protobuf
-  grpc++
+  # ${Boost_LIBRARIES}
+  protobuf::libprotobuf
+  gRPC::grpc++
 )

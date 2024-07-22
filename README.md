@@ -7,7 +7,26 @@
     sudo apt-get install -y cmake
   ```
 
-# 2. 安装boost1.82：
+# 2. 安装jsoncpp、spdlog
+```shell
+  sudo apt-get install libjsoncpp-dev 
+  sudo apt-get install libspdlog-dev 
+```
+
+# 3. 安装GoogleTest
+```shell
+  git clone https://github.com/google/googletest.git
+  cd googletest
+  cmake .
+  make
+  make install
+```
+
+boost与grpc的安装需要放在 同一个路径下，如：
+boost安装在YourPath/boost，grpc安装在 YourPath/grpc中，
+需要设置third_party_path环境变量，否则编译无法通过，
+以下YourPath需要替换为实际安装路径
+# 4. 安装boost1.82：
   1. 下载boost源码 boost_1_82_0.tar.gz
   2. 安装boost
    ```shell
@@ -16,21 +35,6 @@
   ./bootstrap.sh --prefix=YourPath 
   ./b2 install && rm -rf boost_1_82_0.tar.gz
   ```
-
-# 3. 安装jsoncpp、spdlog
-```shell
-  sudo apt-get install libjsoncpp-dev 
-  sudo apt-get install libspdlog-dev 
-```
-
-# 4. 安装GoogleTest
-```shell
-  git clone https://github.com/google/googletest.git
-  cd googletest
-  cmake .
-  make
-  make install
-```
 
 # 5. 安装grpc
 ```shell
@@ -106,11 +110,19 @@
   cd cmake/build
   cmake -DgRPC_INSTALL=ON \
       -DgRPC_BUILD_TESTS=OFF \
-      -DCMAKE_INSTALL_PREFIX=安装路径 \
+      -DCMAKE_INSTALL_PREFIX=YourPath \
       -DBUILD_SHARED_LIBS=ON \
       ../..
   make -j4
   make install  
 ```
+安装完成后，设置third_party_path为YourPath
+```shell
+	vim ~/.bashrc
+	# 在最后一行加上
+	export third_party_path=YourPath
+	source ~/.bashrc
+```
+
 
 

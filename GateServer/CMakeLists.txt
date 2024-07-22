@@ -18,22 +18,25 @@ option(SHARED_STATIC "shared static" OFF)
 option(INSTALL "install" ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(spdlog REQUIRED)
-set(third_party_path ~/3party/install_dir)
+
+
+if(NOT DEFINED ENV{third_party_path})
+	message(FATAL_ERROR "not defined environment variable:third_party_path")  
+endif()
+message("third_party_path: $ENV{third_party_path}")
+set(third_party_path $ENV{third_party_path})
+
 set(BOOST_CONFIG_DIR "${third_party_path}/boost/lib/cmake/Boost-1.82.0")
 set(PROTOBUF_CONFIG_DIR "${third_party_path}/grpc/lib/cmake/protobuf")
+set(GRPC_CONFIG_DIR "${third_party_path}/grpc/lib/cmake/grpc")
 set(GRPC_INSTALL_DIR  "${third_party_path}/grpc")
 set(PROTOC_BIN_PATH "${third_party_path}/grpc/bin")
+set(Protobuf_DIR "${third_party_path}/grpc/lib/cmake/protobuf")
 
+find_package(spdlog REQUIRED)
 find_package(Boost REQUIRED HINTS ${BOOST_CONFIG_DIR})
-MESSAGE( STATUS "Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
-MESSAGE( STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}.")
-MESSAGE( STATUS "Boost_VERSION = ${Boost_VERSION}.")
-
-find_package(Protobuf REQUIRED HINTS ${PROTOBUF_CONFIG_DIR} )
-MESSAGE( STATUS "Protobuf_version = ${Protobuf_VERSION}.")
-MESSAGE( STATUS "Protobuf_INCLUDE_DIRS = ${Protobuf_INCLUDE_DIRS}.")
-MESSAGE( STATUS "Protobuf_LIBRARIES = ${Protobuf_LIBRARIES}.")
+find_package(Protobuf REQUIRED CONFIG)
+find_package(gRPC REQUIRED HINTS ${GRPC_CONFIG_DIR})
 
 
 # find_program(PROTOBUF_PROTOC protoc PATHS "${PROTOC_BIN_PATH}" )
@@ -56,22 +59,16 @@ set(message_proto_srcs ${PROJECT_SOURCE_DIR}/proto/message.pb.cc)
 set(message_proto_hdrs ${PROJECT_SOURCE_DIR}/proto/message.pb.h)
 set(message_grpc_srcs ${PROJECT_SOURCE_DIR}/proto/message.grpc.pb.cc)
 set(message_grpc_hdrs ${PROJECT_SOURCE_DIR}/proto/message.grpc.pb.h)
-  
+
 
 include_directories(
   ${PROJECT_SOURCE_DIR}/include
   ${Boost_INCLUDE_DIRS}
-  ${Protobuf_INCLUDE_DIRS}
   ${message_proto_path}
-  ${GRPC_INSTALL_DIR}/include
-  # /home/tiancheng/3party/install_dir/grpc/include
 )
 
 link_directories(
   ${PROJECT_SOURCE_DIR}/lib
-  ${PROTOBUF_LIBRARIES}
-  # ${Boost_LIBRARY_DIRS}
-  /home/tiancheng/3party/install_dir/grpc/lib
 )
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
