@@ -4,11 +4,17 @@ package message;
 service VerifyService {
   rpc GetVerifyCode (GetVerifyReq) returns (GetVerifyRsp) {}
 }
+
+enum ErrorCode {
+  Succeed = 0;
+  Error = 1;
+}
+
 message GetVerifyReq {
   string email = 1;
 }
 message GetVerifyRsp {
-  int32 error = 1;
+  ErrorCode error_code = 1;
   string email = 2;
   string code = 3;
 }

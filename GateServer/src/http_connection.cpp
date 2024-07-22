@@ -8,11 +8,13 @@
 
 #include "boost/beast/http/field.hpp"
 #include "boost/beast/http/status.hpp"
+#include "boost/beast/http/verb.hpp"
 #include "boost/beast/http/write.hpp"
 #include "boost/system/detail/error_code.hpp"
 #include "logic_system.h"
 #include "net_const.h"
 #include "server_setting.h"
+#include "utils/logger.h"
 
 namespace uchat {
 namespace gate_server {
@@ -70,31 +72,40 @@ void HttpConnection::handle_req() {
   auto self = shared_from_this();
   if (request_.method() == uchttp::verb::get) {
     PreParseGetParam();
-    for (const auto &[k, v] : url_params_) {
-      std::cout << k << ": " << v << std::endl;
-    }
     bool handle_success = LogicSystem::GetInstance().HandleGet(url_, self);
     if (!handle_success) {
       response_.result(uchttp::status::not_found);
-      response_.set(uchttp::field::content_type, "text/plain");
-      write_response();
-      return;
+    } else {
+      response_.result(uchttp::status::ok);
+      response_.set(uchttp::field::server, "GateServer");
     }
-
-    response_.result(uchttp::status::ok);
-    response_.set(uchttp::field::server, "GateServer");
+    response_.set(uchttp::field::content_type, "text/plain");
     write_response();
     return;
+  } else if (request_.method() == uchttp::verb::post) {
+    bool handle_success = LogicSystem::GetInstance().HandlePost(url_, self);
+    if (!handle_success) {
+      response_.result(uchttp::status::not_found);
+    } else {
+      response_.result(uchttp::status::ok);
+      response_.set(uchttp::field::server, "GateServer");
+    }
+    response_.set(uchttp::field::content_type, "text/plain");
+    write_response();
   }
-
-  // todo post
 }
 
 void HttpConnection::write_response() {
   auto self = shared_from_this();
   uchttp::async_write(
       socket_, response_, [self](boost::system::error_code ec, std::size_t) {
-        self->socket_.shutdown(uctcp::socket::shutdown_type::shutdown_send, ec);
+        if (ec) {
+          LogError("write error: {}", ec.to_string());
+        }
+        if (!self->socket_.shutdown(uctcp::socket::shutdown_type::shutdown_send,
+                                    ec)) {
+          LogError("write error: {}", ec.to_string());
+        }
         self->deadline_.cancel(); // 取消执行等待此计时器的异步操作
       });
 }

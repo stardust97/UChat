@@ -1,9 +1,14 @@
 #include "logic_system.h"
 
 #include <iostream>
+#include <jsoncpp/json/value.h>
 #include <utility>
 
+#include "boost/beast/core/ostream.hpp"
 #include "http_connection.h"
+#include "net_const.h"
+#include "utils/logger.h"
+#include "verify_grpc_client.h"
 
 
 namespace uchat {
@@ -15,30 +20,23 @@ LogicSystem& LogicSystem::GetInstance() {
 }
 
 LogicSystem::LogicSystem() {
-  RegisterHandler(
-      "/get_test", [](std::shared_ptr<HttpConnection> connection) {
-        ucbeast::ostream(connection->response_.body())
-            << "receive get_test req \nhello client!\n";
-        int i = 0;
-        for (auto &elem : connection->url_params_) {
-          i++;
-          ucbeast::ostream(connection->response_.body())
-              << "param" << i << " key is " << elem.first;
-          ucbeast::ostream(connection->response_.body())
-              << ", "
-              << " value is " << elem.second << std::endl;
-        }
-      });
+  registe_get_handler("/get_test",
+                      [this](std::shared_ptr<HttpConnection> connection) {
+                        on_recv_test_req(connection.get());
+                      });
+
+  registe_post_handler("/login",
+                       [this](std::shared_ptr<HttpConnection> connection) {
+                         on_recv_regist_req(connection.get());
+                       });
 }
 
-LogicSystem::~LogicSystem() {
 
-}
 
 bool LogicSystem::HandleGet(std::string const &url,
                             std::shared_ptr<HttpConnection> connection) {
   if(!get_handlers_.count(url)) {
-    std::cout << "not found url: " << url << std::endl;
+    LogError("get req url {} not found", url);
     return false;
   }
   
@@ -46,8 +44,56 @@ bool LogicSystem::HandleGet(std::string const &url,
   return true;
 }
 
-void LogicSystem::RegisterHandler(std::string const &url, HttpHandler handler) {
+bool LogicSystem::HandlePost(std::string const &url,
+                             std::shared_ptr<HttpConnection> connection) {
+  if (!post_handlers_.count(url)) {
+    LogError("post req url {} not found", url);
+    return false;
+  }
+
+  post_handlers_[url](connection);
+  return true;
+}
+
+void LogicSystem::registe_get_handler(std::string const &url,
+                                      HttpHandler handler) {
   get_handlers_.insert(std::make_pair(url, handler));
+}
+
+void LogicSystem::registe_post_handler(std::string const &url,
+                                       HttpHandler handler) {
+  post_handlers_.insert(std::make_pair(url, handler));
+}
+
+void LogicSystem::on_recv_test_req(HttpConnection *connection) {
+  ucbeast::ostream(connection->response_.body())
+      << "receive get_test req \nhello client!\n";
+  int i = 0;
+  for (auto &elem : connection->url_params_) {
+    i++;
+    ucbeast::ostream(connection->response_.body())
+        << "param" << i << " key is " << elem.first;
+    ucbeast::ostream(connection->response_.body())
+        << ", " << " value is " << elem.second << std::endl;
+  }
+}
+
+void LogicSystem::on_recv_regist_req(HttpConnection *conn) {
+  Json::Value req, rsp;
+  if (!req.isMember("email")) {
+    rsp["error_code"] = ErrorCodes::Error_Json;
+  } else {
+    auto &client = VerifyGrpcClient::GetInstance();
+    message::GetVerifyRsp rpc_rsp =
+        client.GetVerifyCode(req["email"].asString());
+    if (rpc_rsp.error_code() == message::ErrorCode::Error) {
+      rsp["error_code"] = ErrorCodes::Error_Json;
+    } else {
+      rsp["error_code"] = ErrorCodes::Success;
+    }
+  }
+  ucbeast::ostream(conn->response_.body()) << rsp.toStyledString();
+  LogInfo("rsp for client: {}", rsp.toStyledString());
 }
 
 }  // namespace gate_server

@@ -15,21 +15,21 @@
 namespace uchat {
 namespace gate_server {
 
-class VerifyClient {
+class VerifyGrpcClient {
 
 public:
-  VerifyClient& GetInstance() {
-    static VerifyClient instance;
+  static VerifyGrpcClient& GetInstance() {
+    static VerifyGrpcClient instance;
     return instance;
   }
   
-  ~VerifyClient() = default;
-  UNCOPYABLE(VerifyClient);
+  ~VerifyGrpcClient() = default;
+  UNCOPYABLE(VerifyGrpcClient);
 
-  message::GetVerifyRsp GetVarifyCode(std::string_view email) ;
+  message::GetVerifyRsp GetVerifyCode(std::string_view email) ;
 
 private:
-  VerifyClient();
+  VerifyGrpcClient();
 private:
   std::unique_ptr<message::VerifyService::Stub> stub_;
 };

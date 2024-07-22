@@ -15,6 +15,10 @@ using uctcp = ucasio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 using uc_ion_contex = ucasio::io_context; // from <boost/asio/io_context.hpp>
 using uc_error_code = boost::system::error_code;
 
-
+enum ErrorCodes {
+  Success = 0,
+  Error_Json = 1001, // Json解析错误
+  RPCFailed = 1002,  // RPC请求错误
+};
 
 #endif

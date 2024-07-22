@@ -19,8 +19,8 @@ aux_source_directory(./utils UTILS_DIRSRCS)
 #   COMMENT "Generating ${message_proto_srcs} and ${message_proto_hdrs} from ${message_proto}"
 #   VERBATIM
 # )
-# /home/tiancheng/3party/install_dir/grpc/bin/protoc --grpc_out . -I ./ message.proto --plugin=protoc-gen-grpc="/home/tiancheng/3party/install_dir/grpc/bin/grpc_cpp_plugin"
-# /home/tiancheng/3party/install_dir/grpc/bin/protoc --cpp_out . -I ./ message.proto
+# /home/tiancheng/3party/install_dir/grpc/bin/protoc --grpc_out . -I . message.proto --plugin=protoc-gen-grpc="/home/tiancheng/3party/install_dir/grpc/bin/grpc_cpp_plugin"
+# /home/tiancheng/3party/install_dir/grpc/bin/protoc --cpp_out . -I . message.proto
 
 # add_custom_target(
 #   protobuf_gen 

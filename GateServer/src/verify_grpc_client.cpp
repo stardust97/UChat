@@ -2,13 +2,13 @@
 
 namespace uchat {
 namespace gate_server {
-VerifyClient::VerifyClient() {
+VerifyGrpcClient::VerifyGrpcClient() {
   auto channel = grpc::CreateChannel("127.0.0.1:50051",
                                      grpc::InsecureChannelCredentials());
   stub_ = message::VerifyService::NewStub(channel);
 }
 
-message::GetVerifyRsp VerifyClient::GetVarifyCode(std::string_view email) {
+message::GetVerifyRsp VerifyGrpcClient::GetVerifyCode(std::string_view email) {
   message::GetVerifyReq req;
   req.set_email(email.data());
 

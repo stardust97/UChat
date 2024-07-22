@@ -19,24 +19,26 @@ class LogicSystem {
 public:
   static LogicSystem &GetInstance();
 
-  ~LogicSystem();
+  ~LogicSystem() = default;
 
   UNCOPYABLE(LogicSystem);
 
   bool HandleGet(std::string const &path,
                  std::shared_ptr<HttpConnection> connection);
-  // todo
-  //  bool HandlePost(std::string const& path,
-  //                  std::shared_ptr<HttpConnection> connection);
 
-  // 注册url对应的handler
-  void RegisterHandler(std::string const &url, HttpHandler handler);
+  bool HandlePost(std::string const &path,
+                  std::shared_ptr<HttpConnection> connection);
 
 private:
   LogicSystem();
 
+  void registe_get_handler(std::string const &url, HttpHandler handler);
+  void registe_post_handler(std::string const &url, HttpHandler handler);
+
+  void on_recv_test_req(HttpConnection* conn);
+  void on_recv_regist_req(HttpConnection* conn);
+
 private:
-  // 记录客户端可以请求的资源URL及其handler
   std::unordered_map<std::string, HttpHandler> post_handlers_;
   std::unordered_map<std::string, HttpHandler> get_handlers_;
 };
