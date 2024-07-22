@@ -18,9 +18,9 @@
 
 namespace uchat {
 namespace gate_server {
-
+  
 HttpConnection::HttpConnection(uc_ion_contex &ioc)
-    : socket_{ioc}, buffer_{8192}, deadline_{
+    : socket_{ioc}, buffer_{KBufferSize}, deadline_{
                                        socket_.get_executor(),
                                        std::chrono::seconds{KHttpCloseTime}} {}
 HttpConnection::~HttpConnection() {}
@@ -41,6 +41,7 @@ void HttpConnection::Start() {
                      });
 }
 
+//todo support only 2 digits currently
 void HttpConnection::PreParseGetParam() {
   auto parm_pos = request_.target().find("?");
   if (parm_pos == std::string::npos) {

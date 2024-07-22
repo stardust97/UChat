@@ -10,7 +10,7 @@ namespace gate_server {
   
 class BoostAcceptor : public std::enable_shared_from_this<BoostAcceptor>{
 public:
-  BoostAcceptor(uc_ion_contex& ioc,unsigned short port);
+  BoostAcceptor(uc_ion_contex& ioc,std::string const& ip, unsigned short port);
   ~BoostAcceptor();
   
   BoostAcceptor(BoostAcceptor const &) = delete;

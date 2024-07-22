@@ -1,6 +1,14 @@
 #include "gate_server.h"
-#include "utils/logger.h"
+
+#include <cstdint>
+#include <fstream>
 #include <iostream>
+#include <stdexcept>
+#include <string>
+
+#include <jsoncpp/json/reader.h>
+#include <jsoncpp/json/value.h>
+#include "utils/logger.h"
 
 namespace uchat {
 namespace gate_server {
@@ -11,11 +19,21 @@ GateServer &GateServer::GetInstance() {
   return instance;
 }
 
-void GateServer::Init(std::string_view path) {
-  // todo read json config file
-  acceptor_ = std::make_shared<uchat::gate_server::BoostAcceptor>(ioc_, 8889);
-  auto& log = Logger::GetInstance();
-  log.Init("./conf/log_setting.json");
+void GateServer::Init(std::string_view http_setting_json_path) {
+  Json::Value root;
+  Json::CharReaderBuilder builder;
+  std::ifstream fin(http_setting_json_path.data());
+  std::string err;
+  if(!Json::parseFromStream(builder, fin, &root, &err)){
+    LogError("parse http setting json path failed: {}", err);
+    throw std::runtime_error("parse http setting json path failed" + err);
+  }
+  std::string ip_addr = root["ip_addr"].asString();
+  std::uint16_t port = root["port"].asUInt();
+  std::uint16_t conn_timeout_ms = root["conn_timeout_ms"].asUInt();
+  
+  acceptor_ =
+      std::make_shared<uchat::gate_server::BoostAcceptor>(ioc_, ip_addr, port);
 }
 
 void GateServer::Start() {

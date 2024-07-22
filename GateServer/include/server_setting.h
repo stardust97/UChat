@@ -5,6 +5,8 @@
 namespace uchat {
   
 static constexpr std::uint8_t KHttpCloseTime {60};
+static constexpr std::uint16_t KBufferSize{8192};
+
 
 }
 #endif

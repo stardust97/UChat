@@ -13,7 +13,7 @@ class GateServer {
 public:
   static GateServer &GetInstance();
   ~GateServer() = default;
-  void Init(std::string_view path);
+  void Init(std::string_view http_setting_json_path);
   void Start();
   void Stop();
 
