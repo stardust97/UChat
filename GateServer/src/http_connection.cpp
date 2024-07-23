@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <utility>
 
 #include "boost/beast/http/field.hpp"
 #include "boost/beast/http/status.hpp"
@@ -18,17 +19,15 @@
 
 namespace uchat {
 namespace gate_server {
-  
-HttpConnection::HttpConnection(uc_ion_contex &ioc)
-    : socket_{ioc}, buffer_{KBufferSize}, deadline_{
-                                       socket_.get_executor(),
-                                       std::chrono::seconds{KHttpCloseTime}} {}
-HttpConnection::~HttpConnection() {}
+
+HttpConnection::HttpConnection(std::shared_ptr<uctcp::socket> socket)
+    : socket_{socket}, buffer_{KBufferSize},
+      deadline_{socket_->get_executor(), std::chrono::seconds{KHttpCloseTime}} {}
 
 void HttpConnection::Start() {
   auto self = shared_from_this();
   std::cout << "start to read mesg from client" << std::endl;
-  uchttp::async_read(socket_, buffer_, request_,
+  uchttp::async_read(*socket_, buffer_, request_,
                      [self](uc_error_code ec, std::size_t bytes_transferred) {
                        if (ec) {
                          std::cout << "http read err: " << ec.what()
@@ -105,11 +104,11 @@ void HttpConnection::handle_req() {
 void HttpConnection::write_response() {
   auto self = shared_from_this();
   uchttp::async_write(
-      socket_, response_, [self](boost::system::error_code ec, std::size_t) {
+      *socket_, response_, [self](boost::system::error_code ec, std::size_t) {
         if (ec) {
           LogError("write error: {}", ec.to_string());
         }
-        if (!self->socket_.shutdown(uctcp::socket::shutdown_type::shutdown_send,
+        if (!self->socket_->shutdown(uctcp::socket::shutdown_type::shutdown_send,
                                     ec)) {
           LogError("write error: {}", ec.to_string());
         }
@@ -122,7 +121,7 @@ void HttpConnection::check_deadline() {
   deadline_.async_wait([self](uc_error_code ec) {
     if (!ec) { // 如果ec为0，说明是计时器超时（详看async_wait说明）
       // Close socket to cancel any outstanding operation.
-      self->socket_.close(ec);
+      self->socket_->close(ec);
       // log
     }
     // 如果ec不为0，是由于计时器调用了cancel(), 产生的错误，

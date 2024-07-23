@@ -19,6 +19,7 @@ public:
 
 private:
   GateServer();
+  void on_new_conn(std::shared_ptr<uctcp::socket> socket);
 
 private:
   uc_ion_contex ioc_;

@@ -13,13 +13,13 @@ class HttpConnection : public std::enable_shared_from_this<HttpConnection> {
 public:
   friend class LogicSystem;
   
-  HttpConnection(uc_ion_contex& ioc);
-  ~HttpConnection();
+  HttpConnection(std::shared_ptr<uctcp::socket> socket);
+  ~HttpConnection() = default;
 
   // start to recv and handle a http message, no-blocked 
   void Start();
 
-  uctcp::socket &GetSocket() { return socket_; }
+  uctcp::socket &GetSocket() { return *socket_; }
 
   void PreParseGetParam();
 
@@ -44,7 +44,7 @@ private:
 
   std::string url_decode(const std::string &str);
 
-  uctcp::socket socket_;
+  std::shared_ptr<uctcp::socket> socket_;
   ucbeast::flat_buffer buffer_;
   ucbeast::net::steady_timer deadline_;
   uchttp::request<uchttp::dynamic_body> request_;
