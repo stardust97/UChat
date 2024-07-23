@@ -14,6 +14,12 @@ TEST(http_conn, encode) {
   EXPECT_EQ(url_encode, "key1%3D%2520+key2%3D1F");
   EXPECT_EQ(url_decode, "key1=%20 key2=1F");
 
+  // test for eaul key but not equal value
+  url = "/get_test?kl=jj&kl=23";
+  conn.request_.target(url) ;
+  conn.PreParseGetParam();
+  EXPECT_EQ(conn.url_params_["kl"], "23");
+
   // url = "key1=%C2+key2=%3E";
   // url_decode = conn.url_decode(url);
   // url_encode = conn.url_encode(url_decode);
@@ -28,7 +34,7 @@ TEST(http_conn, encode) {
 }
 
 
-TEST(http_conn, parse_param) {
+TEST(http_conn, test_login_url) {
   uc_ion_contex ioc;
   HttpConnection conn(ioc);
   std::string url =

@@ -44,8 +44,10 @@ void HttpConnection::Start() {
 //todo support only 2 digits currently
 void HttpConnection::PreParseGetParam() {
   auto parm_pos = request_.target().find("?");
+  LogInfo("recv url: {}", request_.target());
   if (parm_pos == std::string::npos) {
-    std::cout << "no params in url" << std::endl;
+    LogInfo("no params in url");
+    url_ = request_.target().substr(0);
     return;
   }
   url_ = request_.target().substr(0, parm_pos);
@@ -64,6 +66,10 @@ void HttpConnection::PreParseGetParam() {
       parse_param(decode_url);
       pos_and1 = pos_and2;
     }
+  }
+  LogInfo("parse param finished:");
+  for(auto& [k,v] : url_params_){
+    LogInfo("key is {}, value is {}", k, v);
   }
 }
 
@@ -128,6 +134,9 @@ void HttpConnection::parse_param(std::string const &param_str) {
   std::string::size_type pos = param_str.find('=');
   std::string key = url_decode(param_str.substr(0, pos));
   std::string value = url_decode(param_str.substr(pos + 1));
+  if(url_params_.find(key)!=url_params_.end()) {
+    LogWarn("key {} already exists, value is {}, now update: {}", key,url_params_[key], value);
+  }
   url_params_[key] = value;
 }
 

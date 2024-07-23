@@ -19,7 +19,7 @@
   cd googletest
   cmake .
   make
-  make install
+  sudo make install
 ```
 
 boost与grpc的安装需要放在 同一个路径下，如：

@@ -10,7 +10,10 @@ add_executable(
   test_http_connection.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/http_connection.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/logic_system.cpp
-
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/utils/logger.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/verify_grpc_client.cpp
+  ${message_proto_srcs}
+  ${message_grpc_srcs}
 )
 
 target_link_libraries(
@@ -24,6 +27,10 @@ target_link_libraries(
   PRIVATE
   pthread
   gtest gtest_main
+  protobuf::libprotobuf
+  gRPC::grpc++
+  spdlog::spdlog
+  jsoncpp
 )
 
 
