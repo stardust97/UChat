@@ -13,6 +13,7 @@
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/value.h>
 #include "http_connection.h"
+#include "net_const.h"
 #include "utils/logger.h"
 
 namespace uchat {
@@ -64,6 +65,7 @@ void GateServer::Stop() { ioc_.stop(); }
 void GateServer::on_new_conn(std::shared_ptr<uctcp::socket> socket) {
   auto conn =std::make_shared<HttpConnection>(socket);
   conn->Start();
+
 }
 
 } // namespace gate_server

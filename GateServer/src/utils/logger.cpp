@@ -50,19 +50,16 @@ void Logger::Init(std::string_view config_path) {
 
   if (enable_console) {
     console_logger_ = spdlog::stdout_color_mt("defalut_console_logger");
-    console_logger_->set_level(spdlog::level::info);
-    console_logger_->set_pattern("[console] [%^%l%$] %v");
+    console_logger_->set_level(spdlog::level::trace);
   }
 
   if (enable_file) {
     file_logger_ = spdlog::basic_logger_mt("default_file_logger", log_path);
-    file_logger_->set_level(spdlog::level::info);
-    file_logger_->set_pattern("[file] [%^%l%$] %v");
-    file_logger_->info("File Logger Init succeed");
+    file_logger_->set_level(spdlog::level::trace);
     spdlog::flush_every(std::chrono::seconds(1));
   }
-
-  // logger_->flush_on(spdlog::level::trace);
+  spdlog::set_pattern(
+      "%^[%l][%Y-%m-%d %H:%M:%S.%e][thread %t] %v");
 }
 void Logger::SetLevel(LogLevel level) { level_ = level; }
 

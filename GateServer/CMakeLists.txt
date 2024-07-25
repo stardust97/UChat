@@ -34,6 +34,7 @@ set(PROTOC_BIN_PATH "${third_party_path}/grpc/bin")
 set(Protobuf_DIR "${third_party_path}/grpc/lib/cmake/protobuf")
 
 find_package(spdlog REQUIRED)
+add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 find_package(Boost REQUIRED HINTS ${BOOST_CONFIG_DIR})
 find_package(Protobuf REQUIRED CONFIG)
 find_package(gRPC REQUIRED HINTS ${GRPC_CONFIG_DIR})
