@@ -15,6 +15,7 @@
 #include "http_connection.h"
 #include "net_const.h"
 #include "utils/logger.h"
+#include "utils/server_setting.h"
 
 namespace uchat {
 namespace gate_server {
@@ -37,7 +38,10 @@ void GateServer::Init(std::string_view http_setting_json_path) {
   std::string ip_addr = root["ip_addr"].asString();
   std::uint16_t port = root["port"].asUInt();
   std::uint16_t conn_timeout_ms = root["conn_timeout_ms"].asUInt();
-  
+  // parse http setting
+  ConfigParser parser;
+  parser.ParseJson(http_setting_json_path);
+  // init acceptor
   acceptor_ =
       std::make_shared<uchat::gate_server::BoostAcceptor>(ioc_, ip_addr, port);
   acceptor_->SetConnectionCb(

@@ -14,15 +14,15 @@
 #include "boost/system/detail/error_code.hpp"
 #include "logic_system.h"
 #include "net_const.h"
-#include "server_setting.h"
 #include "utils/logger.h"
+#include "utils/server_setting.h"
 
 namespace uchat {
 namespace gate_server {
 
 HttpConnection::HttpConnection(std::shared_ptr<uctcp::socket> socket)
-    : socket_{socket}, buffer_{KBufferSize},
-      deadline_{socket_->get_executor(), std::chrono::seconds{KHttpCloseTime}} {}
+    : socket_{socket}, buffer_{http_config::KReadBufferSize},
+      deadline_{socket_->get_executor(), std::chrono::seconds{http_config::KHttpCloseTime}} {}
 
 void HttpConnection::Start() {
   auto self = shared_from_this();

@@ -8,7 +8,7 @@ int main() {
   auto &log = uchat::Logger::GetInstance();
   log.Init("conf/log_setting.json");
   auto &server = uchat::gate_server::GateServer::GetInstance();
-  server.Init("conf/http_setting.json");
+  server.Init("conf/gate_server_setting.json");
   server.Start();
   } catch (std::exception &e) {
     std::cout << "Exception: " << e.what();

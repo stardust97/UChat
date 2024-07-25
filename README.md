@@ -27,7 +27,7 @@ boost安装在YourPath/boost，grpc安装在 YourPath/grpc中，
 需要设置third_party_path环境变量，否则编译无法通过，
 以下YourPath需要替换为实际安装路径
 # 4. 安装boost1.82：
-  1. 下载boost源码 boost_1_82_0.tar.gz
+  1. 下载boost源码 boost_1_82_0.tar.gz https://archives.boost.io/release/1.82.0/source/
   2. 安装boost
    ```shell
   tar -xzf boost_1_82_0.tar.gz 
@@ -36,7 +36,7 @@ boost安装在YourPath/boost，grpc安装在 YourPath/grpc中，
   ./b2 install && rm -rf boost_1_82_0.tar.gz
   ```
 
-# 5. 安装grpc
+# 5. 安装grpc(包含了protobuf)
 ```shell
   sudo apt-get install autoconf libtool pkg-config
   git clone -b v1.28.x https://gitee.com/slrom/grpc
@@ -121,6 +121,7 @@ boost安装在YourPath/boost，grpc安装在 YourPath/grpc中，
 	vim ~/.bashrc
 	# 在最后一行加上
 	export third_party_path=YourPath
+	#退出编辑后更新环境变量
 	source ~/.bashrc
 ```
 
