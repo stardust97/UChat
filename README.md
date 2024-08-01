@@ -126,4 +126,10 @@ boost安装在YourPath/boost，grpc安装在 YourPath/grpc中，
 ```
 
 
+# 6. 生成.pb文件(如果需要更新)
+仓库中默认的{.pb文件想要生成的路径}为GateServer/proto, {message文件所在路径}默认也在GateServer/proto，如果protoc的路径不在环境变量里，按照以下方式生成：
+1. 生成.pb.h与.pb.c
+{YourPath}/grpc/bin/protoc --cpp_out .pb文件想要生成的路径 -I message文件所在路径 message文件名称 
 
+2. 生成.grpc.pb.h与.grpc.pb.c
+{YourPath}/grpc/bin/protoc --grpc_out .pb文件想要生成的路径 -I message文件所在路径 message文件名称 --plugin=protoc-gen-grpc="{YourPath}/grpc/bin/protoc-gen-grpc"
