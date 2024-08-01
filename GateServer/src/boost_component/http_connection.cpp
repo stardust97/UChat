@@ -1,4 +1,4 @@
-#include "http_connection.h"
+#include "boost_component/http_connection.h"
 
 #include <cctype>
 #include <cstdint>
@@ -13,9 +13,9 @@
 #include "boost/beast/http/write.hpp"
 #include "boost/system/detail/error_code.hpp"
 #include "logic_system.h"
-#include "net_const.h"
+#include "common/net_const.h"
+#include "common/server_setting.h"
 #include "utils/logger.h"
-#include "utils/server_setting.h"
 
 namespace uchat {
 namespace gate_server {

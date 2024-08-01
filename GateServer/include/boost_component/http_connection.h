@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "logic_system.h"
-#include "net_const.h"
+#include "common/net_const.h"
 
 namespace uchat {
 namespace gate_server {

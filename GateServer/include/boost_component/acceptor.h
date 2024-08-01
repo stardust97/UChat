@@ -4,8 +4,8 @@
 #include <functional>
 #include <memory>
 
-#include "macro.h"
-#include "net_const.h"
+#include "common/macro.h"
+#include "common/net_const.h"
 
 namespace uchat {
 namespace gate_server {

@@ -1,4 +1,7 @@
 aux_source_directory(. DIRSRCS)
+aux_source_directory(./boost_component BOOST_COMPONENT_DIRSRCS)
+aux_source_directory(./common COMMON_DIRSRCS)
+aux_source_directory(./rpc RPC_DIRSRCS)
 aux_source_directory(./utils UTILS_DIRSRCS)
 
 #mark why failed in top cmake_lists
@@ -32,7 +35,10 @@ aux_source_directory(./utils UTILS_DIRSRCS)
 add_executable(
   gate_server
   ${DIRSRCS} 
+  ${BOOST_COMPONENT_DIRSRCS}
+  ${COMMON_DIRSRCS}
   ${UTILS_DIRSRCS}
+  ${RPC_DIRSRCS}
   ${message_proto_srcs}
   ${message_grpc_srcs}
 )

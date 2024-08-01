@@ -5,10 +5,10 @@
 #include <utility>
 
 #include "boost/beast/core/ostream.hpp"
-#include "http_connection.h"
-#include "net_const.h"
+#include "boost_component/http_connection.h"
+#include "common/net_const.h"
 #include "utils/logger.h"
-#include "verify_grpc_client.h"
+#include "rpc/verify_grpc_client.h"
 
 
 namespace uchat {

@@ -1,4 +1,4 @@
-#include "verify_grpc_client.h"
+#include "rpc/verify_grpc_client.h"
 
 namespace uchat {
 namespace gate_server {

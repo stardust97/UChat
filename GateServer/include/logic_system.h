@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <string>
 
-#include "macro.h"
+#include "common/macro.h"
 
 namespace uchat {
 namespace gate_server {

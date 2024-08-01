@@ -5,12 +5,12 @@
 #include <string_view>
 
 #include "grpcpp/impl/codegen/status.h"
-#include "macro.h"
+#include <grpcpp/grpcpp.h>
 #include "message.grpc.pb.h"
 #include "message.pb.h"
-#include "net_const.h"
+#include "common/net_const.h"
+#include "common/macro.h"
 #include "utils/logger.h"
-#include <grpcpp/grpcpp.h>
 
 namespace uchat {
 namespace gate_server {

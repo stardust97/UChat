@@ -4,8 +4,8 @@
 #include <memory>
 #include <string_view>
 
-#include "acceptor.h"
-#include "net_const.h"
+#include "boost_component/acceptor.h"
+#include "common/net_const.h"
 
 namespace uchat {
 namespace gate_server {
@@ -22,7 +22,7 @@ private:
   void on_new_conn(std::shared_ptr<uctcp::socket> socket);
 
 private:
-  uc_ion_contex ioc_;
+  uc_ion_contex& ioc_;
   std::shared_ptr<uchat::gate_server::BoostAcceptor> acceptor_;
 };
 

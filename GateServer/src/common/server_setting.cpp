@@ -1,10 +1,12 @@
-#include "utils/server_setting.h"
-#include "utils/logger.h"
+#include "common/server_setting.h"
 
 #include <fstream>
+#include <stdexcept>
+
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/value.h>
-#include <stdexcept>
+#include "utils/logger.h"
+
 
 namespace uchat {
 namespace gate_server {

@@ -12,14 +12,17 @@
 
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/value.h>
-#include "http_connection.h"
-#include "net_const.h"
+#include "boost_component/http_connection.h"
+#include "boost_component/io_context_pool.h"
+#include "common/net_const.h"
+#include "common/server_setting.h"
 #include "utils/logger.h"
-#include "utils/server_setting.h"
 
 namespace uchat {
 namespace gate_server {
-GateServer::GateServer() : ioc_{1}, acceptor_{nullptr} {}
+GateServer::GateServer()
+    : ioc_{IoContextPool::GetInstance().GetAcceptContext()},
+      acceptor_{nullptr} {}
 
 GateServer &GateServer::GetInstance() {
   static GateServer instance;
@@ -41,6 +44,7 @@ void GateServer::Init(std::string_view http_setting_json_path) {
   // parse http setting
   ConfigParser parser;
   parser.ParseJson(http_setting_json_path);
+  
   // init acceptor
   acceptor_ =
       std::make_shared<uchat::gate_server::BoostAcceptor>(ioc_, ip_addr, port);
