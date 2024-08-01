@@ -1,5 +1,6 @@
 #include "io_context_pool.h"
 
+#include "utils/logger.h"
 #include "utils/server_setting.h"
 namespace uchat {
 namespace gate_server {
@@ -13,13 +14,27 @@ IoContextPool::IoContextPool()
     threads_.emplace_back([this, i] { io_contexts_[i].run(); });
   }
 }
-
+IoContextPool::~IoContextPool() {
+  destroy();
+  LogInfo("IoContextPool destroyed");
+}
 ucasio::io_context& IoContextPool::GetContext(){
   ucasio::io_context &cur_context = io_contexts_[next_context_index_++];
   if (next_context_index_ == io_contexts_.size()) {
     next_context_index_ = 0;
   }
   return cur_context;
+}
+
+
+void IoContextPool::destroy() {
+  for(auto& work : works_){
+    work->get_io_context().stop();
+    work.reset();
+  }
+  for(auto& thread : threads_){
+    thread.join();
+  }
 }
 
 } // namespace gate_server

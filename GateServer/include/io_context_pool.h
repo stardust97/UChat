@@ -8,17 +8,19 @@ namespace gate_server {
 class IoContextPool{
 
 public:
-static IoContextPool& GetInstance(){
-  static IoContextPool instance;
-  return instance;
-}
+  static IoContextPool &GetInstance() {
+    static IoContextPool instance;
+    return instance;
+  }
 
-ucasio::io_context& GetContext();
+  ~IoContextPool();
+  
+  ucasio::io_context &GetContext();
 
 private:
-IoContextPool();
+  IoContextPool();
 
-void destroy();
+  void destroy();
 
 private:
   using IOService = boost::asio::io_context;
