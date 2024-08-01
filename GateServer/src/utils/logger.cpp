@@ -41,6 +41,8 @@ void Logger::Init(std::string_view config_path) {
     level_ = LogLevel::kWarn;
   } else if (level_str == "error") {
     level_ = LogLevel::kError;
+  } else if(level_str == "fatal"){
+    level_ = LogLevel::kFatal;
   } else {
     throw std::runtime_error("invalid log level: " + level_str);
     return;

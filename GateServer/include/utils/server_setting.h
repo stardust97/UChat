@@ -8,11 +8,12 @@ namespace gate_server {
 namespace http_config {
 extern std::uint8_t KHttpCloseTime;
 extern std::uint16_t KReadBufferSize;
+extern std::uint16_t KIoThreadNum;
 } // namespace http_config
 
 class ConfigParser {
 public:
-  ConfigParser();
+  ConfigParser() = default;
   ~ConfigParser() = default;
   
   void ParseJson(std::string_view json_path);

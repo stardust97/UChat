@@ -8,6 +8,7 @@
 #include "http_connection.h"
 #include "net_const.h"
 #include "utils/logger.h"
+#include "io_context_pool.h"
 
 namespace uchat {
 namespace gate_server {
@@ -18,7 +19,8 @@ BoostAcceptor::BoostAcceptor(uc_ion_contex &ioc, std::string const &ip,
 
 void BoostAcceptor::Start() {
   auto self = shared_from_this();
-  std::shared_ptr<uctcp::socket> socket = std::make_shared<uctcp::socket>(ioc_);
+  auto& context_ = IoContextPool::GetInstance().GetContext();
+  std::shared_ptr<uctcp::socket> socket = std::make_shared<uctcp::socket>(context_);
   acceptor_.async_accept(
       *socket, [self, socket](boost::system::error_code ec) mutable {
         if (ec) {

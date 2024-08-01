@@ -69,7 +69,6 @@ void GateServer::Stop() { ioc_.stop(); }
 void GateServer::on_new_conn(std::shared_ptr<uctcp::socket> socket) {
   auto conn =std::make_shared<HttpConnection>(socket);
   conn->Start();
-
 }
 
 } // namespace gate_server

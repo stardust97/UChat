@@ -1,4 +1,5 @@
 {
+  "invalid_log_level": "trace,debug,info,warn,error,fatal",
   "log_level": "info",
   "log_path": "log/gate_server.log",
   "enable_file": true,
