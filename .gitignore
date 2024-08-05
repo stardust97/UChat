@@ -7,3 +7,4 @@ output
 cmake-build-debug
 data-logger
 *.bak
+node_modules

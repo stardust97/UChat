@@ -137,3 +137,11 @@ source ~/.bashrc
 ```shell
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:{YourPath}/grpc/lib
 ```
+
+# 7. nodejs安装grpc-js
+```shell
+npm cache clean --force
+npm config set registry https://registry.npmmirror.com
+npm install @grpc/grpc-js
+npm install @grpc/proto-loader
+```
