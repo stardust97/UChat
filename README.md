@@ -1,25 +1,25 @@
 # 1. 安装C++环境
-  ```shell
-    sudo apt-get update 
-    sudo apt-get install -y build-essential 
-    sudo apt-get install -y git 
-    sudo apt-get install -y vim 
-    sudo apt-get install -y cmake
-  ```
+```shell
+sudo apt-get update 
+sudo apt-get install -y build-essential 
+sudo apt-get install -y git 
+sudo apt-get install -y vim 
+sudo apt-get install -y cmake
+```
 
 # 2. 安装jsoncpp、spdlog
 ```shell
-  sudo apt-get install libjsoncpp-dev 
-  sudo apt-get install libspdlog-dev 
+sudo apt-get install libjsoncpp-dev 
+sudo apt-get install libspdlog-dev 
 ```
 
 # 3. 安装GoogleTest
 ```shell
-  git clone https://github.com/google/googletest.git
-  cd googletest
-  cmake .
-  make
-  sudo make install
+git clone https://github.com/google/googletest.git
+cd googletest
+cmake .
+make
+sudo make install
 ```
 
 boost与grpc的安装需要放在 同一个路径下，如：
@@ -38,9 +38,9 @@ boost安装在YourPath/boost，grpc安装在 YourPath/grpc中，
 
 # 5. 安装grpc(包含了protobuf)
 ```shell
-  sudo apt-get install autoconf libtool pkg-config
-  git clone -b v1.28.x https://gitee.com/slrom/grpc
-  cd grpc
+sudo apt-get install autoconf libtool pkg-config
+git clone -b v1.28.x https://gitee.com/slrom/grpc
+cd grpc
 ```
 替换.gitmodule文件里的内容
 ```
@@ -105,24 +105,24 @@ boost安装在YourPath/boost，grpc安装在 YourPath/grpc中，
 ```
 
 ```shell
-  git submodule update --init
-  mkdir -p cmake/build
-  cd cmake/build
-  cmake -DgRPC_INSTALL=ON \
-      -DgRPC_BUILD_TESTS=OFF \
-      -DCMAKE_INSTALL_PREFIX=YourPath \
-      -DBUILD_SHARED_LIBS=ON \
-      ../..
-  make -j4
-  make install  
+git submodule update --init
+mkdir -p cmake/build
+cd cmake/build
+cmake -DgRPC_INSTALL=ON \
+		-DgRPC_BUILD_TESTS=OFF \
+		-DCMAKE_INSTALL_PREFIX=YourPath \
+		-DBUILD_SHARED_LIBS=ON \
+		../..
+make -j4
+make install  
 ```
 安装完成后，设置third_party_path为YourPath
 ```shell
-	vim ~/.bashrc
-	# 在最后一行加上
-	export third_party_path=YourPath
-	#退出编辑后更新环境变量
-	source ~/.bashrc
+vim ~/.bashrc
+# 在最后一行加上
+export third_party_path=YourPath
+#退出编辑后更新环境变量
+source ~/.bashrc
 ```
 
 
@@ -133,3 +133,7 @@ boost安装在YourPath/boost，grpc安装在 YourPath/grpc中，
 
 2. 生成.grpc.pb.h与.grpc.pb.c
 {YourPath}/grpc/bin/protoc --grpc_out .pb文件想要生成的路径 -I message文件所在路径 message文件名称 --plugin=protoc-gen-grpc="{YourPath}/grpc/bin/protoc-gen-grpc"
+生成提示缺少动态库时需要
+```shell
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:{YourPath}/grpc/lib
+```
