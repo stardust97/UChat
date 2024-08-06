@@ -144,4 +144,7 @@ npm cache clean --force
 npm config set registry https://registry.npmmirror.com
 npm install @grpc/grpc-js
 npm install @grpc/proto-loader
+npm install uuid
+npm install nodemailer
+npm install fs
 ```

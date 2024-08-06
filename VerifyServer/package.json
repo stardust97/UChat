@@ -10,6 +10,10 @@
   "description": "",
   "dependencies": {
     "@grpc/grpc-js": "^1.11.1",
-    "@grpc/proto-loader": "^0.7.13"
+    "@grpc/proto-loader": "^0.7.13",
+    "fs": "^0.0.1-security",
+    "nodemailer": "^6.9.14",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "uuid": "^10.0.0"
   }
 }
