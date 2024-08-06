@@ -21,12 +21,14 @@ async function GetVerifyCode(call, callback) {
     //     if(query_res == null){
 
     //     }
-    //     let uniqueId = query_res;
-    //     if(query_res ==null){
-    //         uniqueId = uuidv4();
-    //         if (uniqueId.length > 4) {
-    //             uniqueId = uniqueId.substring(0, 4);
-    //         } 
+        // let uniqueId = query_res;
+         let uniqueId = 123465;
+
+        // if(query_res ==null){
+            uniqueId = uuidv4();
+            if (uniqueId.length > 4) {
+                uniqueId = uniqueId.substring(0, 4);
+            } 
     //         let bres = await redis_module.SetRedisExpire(const_module.code_prefix+call.request.email, uniqueId,600)
     //         if(!bres){
     //             callback(null, { email:  call.request.email,
@@ -36,9 +38,8 @@ async function GetVerifyCode(call, callback) {
     //         }
     //     }
 
-    //     console.log("uniqueId is ", uniqueId)
-    //     let text_str =  '您的验证码为'+ uniqueId +'请三分钟内完成注册'
-        let text_str =  '您的验证码为'+ 123456 +'请三分钟内完成注册'
+        console.log("uniqueId is ", uniqueId)
+        let text_str =  '您的验证码为'+ uniqueId +'请三分钟内完成注册'
         //发送邮件
         let mailOptions = {
             from: config_module.email_user,
@@ -52,7 +53,7 @@ async function GetVerifyCode(call, callback) {
 
         callback(null, { email:  call.request.email,
             error:const_module.Errors.Success,
-            code:123456// todo
+            code:uniqueId
         }); 
         
  
