@@ -1,7 +1,11 @@
 {
+    "grpc_bind_address":"0.0.0.0:50051",
     "email": {
       "user": "641765169@qq.com",
-      "pass": "fkahqwwaukebbcjf"
+      "pass": "fkahqwwaukebbcjf",
+      "server_host":"smtp.qq.com",
+      "server_port":465,
+      "enable_ssl":true
     },
 
     "mysql": {

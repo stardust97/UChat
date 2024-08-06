@@ -14,6 +14,7 @@ message::GetVerifyRsp VerifyGrpcClient::GetVerifyCode(std::string_view email) {
 
   message::GetVerifyRsp rsp;
   grpc::ClientContext context;
+  //todo timeout?
   grpc::Status status = stub_->GetVerifyCode(&context, req, &rsp);
   if (status.ok()) {
     // rsp.set_error(Errorcode::)

@@ -52,7 +52,7 @@ async function GetVerifyCode(call, callback) {
 
         callback(null, { email:  call.request.email,
             error:const_module.Errors.Success,
-            code:123456
+            code:123456// todo
         }); 
         
  
@@ -69,7 +69,7 @@ async function GetVerifyCode(call, callback) {
 function main() {
     var server = new grpc.Server()
     server.addService(message_proto.VerifyService.service, { GetVerifyCode: GetVerifyCode })
-    server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+    server.bindAsync(config_module.bind_address, grpc.ServerCredentials.createInsecure(), () => {
         server.start()
         console.log('verify server started')        
     })
