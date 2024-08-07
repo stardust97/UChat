@@ -11,6 +11,10 @@ extern std::uint16_t KReadBufferSize;
 extern std::uint16_t KIoThreadNum;
 } // namespace http_config
 
+namespace rpc_config{
+  extern std::string KVerifyServerAddr;
+}
+
 class ConfigParser {
 public:
   ConfigParser() = default;

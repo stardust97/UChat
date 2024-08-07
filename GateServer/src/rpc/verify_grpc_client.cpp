@@ -1,9 +1,10 @@
 #include "rpc/verify_grpc_client.h"
+#include "common/server_setting.h"
 
 namespace uchat {
 namespace gate_server {
 VerifyGrpcClient::VerifyGrpcClient() {
-  auto channel = grpc::CreateChannel("127.0.0.1:50051",
+  auto channel = grpc::CreateChannel(rpc_config::KVerifyServerAddr,
                                      grpc::InsecureChannelCredentials());
   stub_ = message::VerifyService::NewStub(channel);
 }

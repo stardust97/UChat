@@ -15,6 +15,11 @@ namespace http_config {
   std::uint16_t KReadBufferSize{8192};
   std::uint16_t KIoThreadNum{2};
 } // namespace http_config
+
+namespace rpc_config{
+  std::string KVerifyServerAddr;
+}
+
   void ConfigParser::ParseJson(std::string_view json_path){
     Json::Value root;
     Json::CharReaderBuilder builder;
@@ -36,6 +41,9 @@ namespace http_config {
             "KReadBufferSize:{}, KIoThreadNum: {}",
             http_config::KHttpCloseTime, http_config::KReadBufferSize,
             http_config::KIoThreadNum);
+
+    rpc_config::KVerifyServerAddr = root["verify_server_address"].asString();
+    LogInfo("read rpc settings from json, KVerifyServerAddr: {}", rpc_config::KVerifyServerAddr);
   }
 
 } // namespace gate_server

@@ -1,6 +1,7 @@
 #include "logic_system.h"
 
 #include <iostream>
+#include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/value.h>
 #include <utility>
 
@@ -25,7 +26,7 @@ LogicSystem::LogicSystem() {
                         on_recv_test_req(connection.get());
                       });
 
-  registe_post_handler("/login",
+  registe_post_handler("/login/get_verifycode",
                        [this](std::shared_ptr<HttpConnection> connection) {
                          on_recv_regist_req(connection.get());
                        });
@@ -79,21 +80,26 @@ void LogicSystem::on_recv_test_req(HttpConnection *connection) {
 }
 
 void LogicSystem::on_recv_regist_req(HttpConnection *conn) {
+  Json::Reader reader;
   Json::Value req, rsp;
-  if (!req.isMember("email")) {
-    rsp["error_code"] = ErrorCodes::Error_Json;
-  } else {
-    auto &client = VerifyGrpcClient::GetInstance();
-    message::GetVerifyRsp rpc_rsp =
-        client.GetVerifyCode(req["email"].asString());
-    if (rpc_rsp.error_code() == message::ErrorCode::Error) {
-      rsp["error_code"] = ErrorCodes::Error_Json;
-    } else {
-      rsp["error_code"] = ErrorCodes::Success;
-    }
-  }
-  ucbeast::ostream(conn->response_.body()) << rsp.toStyledString();
-  LogInfo("rsp for client: {}", rsp.toStyledString());
+  std::string body_str = boost::beast::buffers_to_string(conn->request_.body().data());
+  reader.parse(body_str, req);
+  LogInfo("recv regist req, body: {}", body_str);
+
+  // if (!req.isMember("email")) {
+  //   rsp["error_code"] = ErrorCodes::Error_Json;
+  // } else {
+  //   auto &client = VerifyGrpcClient::GetInstance();
+  //   message::GetVerifyRsp rpc_rsp =
+  //       client.GetVerifyCode(req["email"].asString());
+  //   if (rpc_rsp.error_code() == message::ErrorCode::Error) {
+  //     rsp["error_code"] = ErrorCodes::Error_Json;
+  //   } else {
+  //     rsp["error_code"] = ErrorCodes::Success;
+  //   }
+  // }
+  // ucbeast::ostream(conn->response_.body()) << rsp.toStyledString();
+  // LogInfo("rsp for client: {}", rsp.toStyledString());
 }
 
 }  // namespace gate_server
