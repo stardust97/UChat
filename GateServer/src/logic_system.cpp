@@ -86,20 +86,21 @@ void LogicSystem::on_recv_regist_req(HttpConnection *conn) {
   reader.parse(body_str, req);
   LogInfo("recv regist req, body: {}", body_str);
 
-  // if (!req.isMember("email")) {
-  //   rsp["error_code"] = ErrorCodes::Error_Json;
-  // } else {
-  //   auto &client = VerifyGrpcClient::GetInstance();
-  //   message::GetVerifyRsp rpc_rsp =
-  //       client.GetVerifyCode(req["email"].asString());
-  //   if (rpc_rsp.error_code() == message::ErrorCode::Error) {
-  //     rsp["error_code"] = ErrorCodes::Error_Json;
-  //   } else {
-  //     rsp["error_code"] = ErrorCodes::Success;
-  //   }
-  // }
-  // ucbeast::ostream(conn->response_.body()) << rsp.toStyledString();
-  // LogInfo("rsp for client: {}", rsp.toStyledString());
+  if (!req.isMember("email")) {
+    rsp["error_code"] = ErrorCodes::Error_Json;
+  } else {
+    auto &client = VerifyGrpcClient::GetInstance();
+    message::GetVerifyRsp rpc_rsp =
+        client.GetVerifyCode(req["email"].asString());
+    if (rpc_rsp.error_code() == message::ErrorCode::Error) {
+      rsp["error_code"] = ErrorCodes::RPCFailed;
+    } else {
+      rsp["error_code"] = ErrorCodes::Success;
+    }
+  }
+  rsp["email"] = req["email"];
+  ucbeast::ostream(conn->response_.body()) << rsp.toStyledString();
+  LogInfo("set rsp to client: {}", rsp.toStyledString());
 }
 
 }  // namespace gate_server

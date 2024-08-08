@@ -89,7 +89,6 @@ void HttpConnection::handle_req() {
     write_response();
     return;
   } else if (request_.method() == uchttp::verb::post) {
-    //todo parse email in body
     bool handle_success = LogicSystem::GetInstance().HandlePost(url_, self);
     if (!handle_success) {
       response_.result(uchttp::status::not_found);
