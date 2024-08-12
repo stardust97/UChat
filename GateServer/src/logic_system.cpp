@@ -28,7 +28,12 @@ LogicSystem::LogicSystem() {
 
   registe_post_handler("/login/get_verifycode",
                        [this](std::shared_ptr<HttpConnection> connection) {
-                         on_recv_regist_req(connection.get());
+                         on_recv_verfiy_code_req(connection.get());
+                       });
+
+  registe_post_handler("/login/user_register",
+                       [this](std::shared_ptr<HttpConnection> connection) {
+                         on_recv_verfiy_code_req(connection.get());
                        });
 }
 
@@ -79,15 +84,20 @@ void LogicSystem::on_recv_test_req(HttpConnection *connection) {
   }
 }
 
-void LogicSystem::on_recv_regist_req(HttpConnection *conn) {
+void LogicSystem::on_recv_verfiy_code_req(HttpConnection *conn) {
   Json::Reader reader;
   Json::Value req, rsp;
   std::string body_str = boost::beast::buffers_to_string(conn->request_.body().data());
-  reader.parse(body_str, req);
+  bool parse_json = reader.parse(body_str, req);
   LogInfo("recv regist req, body: {}", body_str);
 
+  if(!parse_json){
+    rsp["error_code"] = ErrorCodes::Error_Json;
+    LogWarn("parse json failed, body: {}", body_str);
+  }
   if (!req.isMember("email")) {
     rsp["error_code"] = ErrorCodes::Error_Json;
+    LogWarn("json item error: {}",body_str);
   } else {
     auto &client = VerifyGrpcClient::GetInstance();
     message::GetVerifyRsp rpc_rsp =
@@ -100,8 +110,41 @@ void LogicSystem::on_recv_regist_req(HttpConnection *conn) {
   }
   rsp["email"] = req["email"];
   ucbeast::ostream(conn->response_.body()) << rsp.toStyledString();
-  LogInfo("set rsp to client: {}", rsp.toStyledString());
+  LogInfo("send verify code rsp to client: {}", rsp.toStyledString());
 }
+
+void LogicSystem::on_recv_user_regist_req(HttpConnection *conn){
+  Json::Reader reader;
+  Json::Value req, rsp;
+  std::string body_str = boost::beast::buffers_to_string(conn->request_.body().data());
+  LogInfo("recv regist req, body: {}", body_str);
+
+  bool parse_json = reader.parse(body_str, req);
+  if(!parse_json){
+    rsp["error_code"] = ErrorCodes::Error_Json;
+    LogWarn("parse json failed, body: {}", body_str);
+  }
+  if (!req.isMember("email") || !req.isMember("password") ||
+      !req.isMember("verify_code")) {
+    rsp["error_code"] = ErrorCodes::Error_Json;
+    LogWarn("json item error: {}",body_str);
+  } else {
+    std::string req_code = req["verify_code"].asString();
+
+    //todo check verify code(email and code)
+    if (true) {
+      rsp["error_code"] = ErrorCodes::Success;
+    } else {
+      rsp["error_code"] = ErrorCodes::VerifyCodeErr;
+    }
+  }
+  
+  // todo find user_name if exists
+  rsp["email"] = req["email"];
+  ucbeast::ostream(conn->response_.body()) << rsp.toStyledString();
+  LogInfo("send user regist rsp to client: {}", rsp.toStyledString());
+}
+
 
 }  // namespace gate_server
 }  // namespace uchat

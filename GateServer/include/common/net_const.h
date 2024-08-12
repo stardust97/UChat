@@ -17,8 +17,9 @@ using uc_error_code = boost::system::error_code;
 
 enum ErrorCodes {
   Success = 0,
-  Error_Json = 1001, // Json解析错误
-  RPCFailed = 1002,  // RPC请求错误
+  Error_Json = 1001,    // Json解析错误
+  RPCFailed = 1002,     // RPC请求错误
+  VerifyCodeErr = 1003, // 验证码错误
 };
 
 #endif

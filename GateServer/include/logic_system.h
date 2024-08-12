@@ -36,7 +36,8 @@ private:
   void registe_post_handler(std::string const &url, HttpHandler handler);
 
   void on_recv_test_req(HttpConnection* conn);
-  void on_recv_regist_req(HttpConnection* conn);
+  void on_recv_verfiy_code_req(HttpConnection* conn);
+  void on_recv_user_regist_req(HttpConnection* conn);
 
 private:
   std::unordered_map<std::string, HttpHandler> post_handlers_;
