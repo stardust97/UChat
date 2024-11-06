@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>注册页面</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+
+
+    .container h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* .container button:hover {
+      background-color: #59118c;
+    }
+ */
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="password"] {
+      width: calc(100% - 20px);
+      /* 减去左右各10px的内边距 */
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="password"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    /*邮箱验证码*/
+    .emailcode-group {
+      margin-bottom: 15px;
+    }
+
+    .emailcode-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .emailcode-group input[type="text"],
+    .emailcode-group input[type="text"] {
+      width: 60%;
+      /* 减去左右各10px的内边距 */
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      border-color: #007bff;
+      outline: none;
+    }
+
+    .emailcode-group button {
+      position: relative;
+      /* top: 10px; */
+      left: 10px;
+      width: 30%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+
+    }
+
+    .submit-button {
+      position: relative;
+      top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>注册页面</h2>
+    <!-- action="/submit_registration" method="post" -->
+    <form id ="regist-form">
+      <div class="form-group">
+        <label for="email">注册邮箱:</label>
+        <input type="text" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">请输入密码:</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password2">请再次输入密码:</label>
+        <input type="password" id="password2" name="password2" required>
+      </div>
+
+
+      <div class="emailcode-group">
+        <label for="emailcode">验证码:</label>
+        <div>
+          <input type="text" id="emailcode" name="emailcode" required>
+          <button type="submit" id = "email_code_button">发送验证码</button>
+        </div>
+      </div>
+
+      <button type="submit" id="login-button">注册账号</button>
+
+    </form>
+  </div>
+
+  <script>
+    // 获取登录表单元素
+    const loginForm = document.getElementById('regist-form');
+    // 监听表单提交事件
+    loginForm.addEventListener('submit', function (event) {
+      event.preventDefault(); // 阻止默认表单提交行为
+      const action = event.submitter.id;
+      // 获取用户输入的用户名和密码
+      const username = document.getElementById('email').value;
+      const email_code = document.getElementById('emailcode').value;
+      const password = document.getElementById('password').value;
+
+      // todo
+      if(action === "email_code_button"){
+        console.log("发送验证码")
+      } else if(action === "login-button") {
+        console.log("注册")
+      }
+    });
+  </script>
+
+
+</body>
+
+
+</html>
