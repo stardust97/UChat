@@ -71,7 +71,6 @@ function main() {
     var server = new grpc.Server()
     server.addService(message_proto.VerifyService.service, { GetVerifyCode: GetVerifyCode })
     server.bindAsync(config_module.bind_address, grpc.ServerCredentials.createInsecure(), () => {
-        server.start()
         console.log('verify server started')        
     })
 }

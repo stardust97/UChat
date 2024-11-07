@@ -1,15 +1,15 @@
 const nodemailer = require('nodemailer');  
-  
+const config_module = require("./config")
+
+
 async function sendMail() {  
     let transport = nodemailer.createTransport({
         host: 'smtp.qq.com',
         port: 465,
         secure: true,
         auth: {
-            // user: config_module.email_user, // 发送方邮箱地址
-            user: '641765169@qq.com', // 发送方邮箱地址
-            pass: 'fkahqwwaukebbcjf' // 邮箱授权码或者密码
-            // pass: config_module.email_pass // 邮箱授权码或者密码
+            user: config_module.email_user, // 发送方邮箱地址
+            pass: config_module.email_pass // 邮箱授权码或者密码
         }
     });
   
